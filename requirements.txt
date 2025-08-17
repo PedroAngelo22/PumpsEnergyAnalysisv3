@@ -1,3 +1,4 @@
 streamlit>=1.25
 pandas
 fpdf2
+matplotlib
