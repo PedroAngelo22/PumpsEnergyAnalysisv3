@@ -186,10 +186,19 @@ with col1:
         else: st.warning("A faixa de diâmetros informada é inválida (Mínimo deve ser menor que Máximo e Passo deve ser positivo).")
 
 with col2:
-    st.header("💡 Sugestões e Relatório"); sugestoes = gerar_sugestoes(rend_bomba/100, rend_motor/100, resultados['custo_anual']); [st.info(s) for s in sugestoes]
+    st.header("💡 Sugestões e Relatório")
+    sugestoes = gerar_sugestoes(rend_bomba/100, rend_motor/100, resultados['custo_anual'])
+    
+    # --- CORREÇÃO AQUI ---
+    # Usando um laço 'for' padrão para garantir a renderização correta.
+    for sugestao in sugestoes:
+        st.info(sugestao)
+
     st.header("📄 Gerar Relatório")
+    # (O restante do código para gerar o relatório continua igual)
     inputs_relatorio = {"Fluido": fluido_selecionado, "Vazão": f"{vazao} m³/h", "Altura Manométrica Total": f"{h_man_total:.2f} m", "Eficiência da Bomba": f"{rend_bomba}%", "Eficiência do Motor": f"{rend_motor}%", "Horas/Dia": f"{horas_por_dia} h", "Tarifa": f"R$ {tarifa_energia:.2f}/kWh"}
     if velocidade_fluido > 0: inputs_relatorio["Velocidade do Fluido"] = f"{velocidade_fluido:.2f} m/s"
     resultados_relatorio = {"Potência Elétrica": f"{resultados['potencia_eletrica_kW']:.2f} kW", "Custo Mensal": f"R$ {(resultados['consumo_mensal_kWh'] * tarifa_energia):.2f}", "Custo Anual": f"R$ {resultados['custo_anual']:.2f}"}
     pdf_bytes = criar_relatorio_pdf(inputs_relatorio, resultados_relatorio, sugestoes)
     st.download_button(label="Download do Relatório em PDF", data=pdf_bytes, file_name=f"Relatorio_Bombeamento_{time.strftime('%Y%m%d-%H%M%S')}.pdf", mime="application/octet-stream")
+    
